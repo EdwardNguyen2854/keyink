@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.claude/
+.opencode/
+.pytest_cache/
+_bmad/
+_bmad-output/
+debug.log
+nul
+docs/
