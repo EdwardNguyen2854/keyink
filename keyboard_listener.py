@@ -58,6 +58,23 @@ class KeyboardListener(QObject):
         super().__init__(parent)
         self._listener = None
         self._pressed_modifiers = set()
+        self._drawing_hotkey = {"ctrl", "shift", "d"}
+        self._drawing_modifiers = {"ctrl", "right_ctrl", "shift", "right_shift"}
+        self._drawing_key = "d"
+
+    def set_drawing_hotkey(self, hotkey_str):
+        """Set the hotkey to trigger drawing toggle. Format: 'ctrl+shift+d'"""
+        parts = hotkey_str.lower().split("+")
+        self._drawing_hotkey = set(parts)
+        self._drawing_modifiers = {
+            "ctrl", "right_ctrl", "shift", "right_shift", 
+            "alt", "right_alt", "win", "right_win"
+        }
+        self._drawing_key = ""
+        for part in parts:
+            if part not in self._drawing_modifiers:
+                self._drawing_key = part
+                break
 
     def start(self):
         self._listener = keyboard.Listener(
@@ -104,12 +121,12 @@ class KeyboardListener(QObject):
                        "alt", "right_alt", "win", "right_win"):
             self._pressed_modifiers.add(key_id)
 
-        # Check for Ctrl+Shift+D to toggle drawing
-        if key_id == "d":
+        # Check for configurable drawing hotkey
+        if self._drawing_key and key_id == self._drawing_key:
             modifiers = self._pressed_modifiers
-            if "ctrl" in modifiers or "right_ctrl" in modifiers:
-                if "shift" in modifiers or "right_shift" in modifiers:
-                    self.toggle_drawing.emit()
+            required_mods = self._drawing_hotkey - {self._drawing_key}
+            if required_mods <= modifiers:
+                self.toggle_drawing.emit()
 
         self.key_pressed.emit(key_id, display)
 

@@ -15,11 +15,11 @@ class DrawingToolbar(QWidget):
     toggle_clicked = Signal()
 
     TOOL_BUTTONS = [
-        ("pen", "P", "Pen"),
-        ("rect", "R", "Rectangle"),
-        ("ellipse", "E", "Ellipse"),
-        ("arrow", "A", "Arrow"),
-        ("line", "L", "Line"),
+        ("pen", "1", "Pen"),
+        ("rect", "2", "Rectangle"),
+        ("ellipse", "3", "Ellipse"),
+        ("arrow", "4", "Arrow"),
+        ("line", "5", "Line"),
     ]
 
     COLORS = [
@@ -70,7 +70,7 @@ class DrawingToolbar(QWidget):
 
         toggle_btn = QPushButton("👁")
         toggle_btn.setFixedSize(32, 28)
-        toggle_btn.setToolTip("Toggle Drawing (Ctrl+Shift+D)")
+        toggle_btn.setToolTip("Toggle Drawing")
         toggle_btn.clicked.connect(self.toggle_clicked.emit)
         tool_layout.addWidget(toggle_btn)
 

@@ -153,6 +153,7 @@ class MainWindow(QMainWindow):
         self.listener.key_pressed.connect(self.history_widget.on_key_pressed)
         self.listener.key_released.connect(self.history_widget.on_key_released)
         self.listener.toggle_drawing.connect(self._on_toggle_drawing)
+        self.listener.key_pressed.connect(self._on_key_pressed_drawing)
 
         # System tray
         self._setup_tray()
@@ -270,6 +271,10 @@ class MainWindow(QMainWindow):
         drawing_opacity = self._settings.get("drawing_canvas_opacity", 15)
         self.drawing_canvas.set_opacity(drawing_opacity)
 
+        # Apply drawing hotkey
+        drawing_hotkey = self._settings.get("drawing_hotkey", "ctrl+shift+d")
+        self.listener.set_drawing_hotkey(drawing_hotkey)
+
         # Apply minimal title bar
         minimal = self._settings.get("minimal_title_bar", False)
         self._title_label.setVisible(not minimal)
@@ -300,6 +305,20 @@ class MainWindow(QMainWindow):
             self.drawing_toolbar.setVisible(True)
             self.drawing_canvas._update_geometry()
             self.drawing_canvas.show()
+
+    def _on_key_pressed_drawing(self, key_id, display):
+        if not self.drawing_toolbar.isVisible():
+            return
+        tool_map = {
+            "1": "pen",
+            "2": "rect",
+            "3": "ellipse",
+            "4": "arrow",
+            "5": "line",
+        }
+        if key_id in tool_map:
+            self._on_tool_selected(tool_map[key_id])
+            self.drawing_toolbar.set_tool(tool_map[key_id])
 
     # --- Drag support ---
 

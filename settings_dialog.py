@@ -3,7 +3,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QSlider, QCheckBox,
-    QPushButton,
+    QPushButton, QLineEdit,
 )
 
 from styles import (
@@ -80,6 +80,19 @@ QPushButton#okBtn:hover {{
     background: {ACCENT_COLOR};
     opacity: 0.9;
 }}
+QLineEdit {{
+    color: {HISTORY_TEXT_COLOR};
+    background: {BG_SECONDARY};
+    border: 1px solid {BORDER_HIGHTLIGHT};
+    border-radius: 6px;
+    padding: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+}}
+QLineEdit:focus {{
+    border: 1px solid {ACCENT_COLOR};
+}}
+
 """
 
 
@@ -166,6 +179,18 @@ class SettingsDialog(QDialog):
         layout.addWidget(self._drawing_opacity_label)
         layout.addWidget(self._drawing_opacity_slider)
 
+        # Drawing hotkey
+        hotkey_label = QLabel("Drawing toggle hotkey:")
+        layout.addWidget(hotkey_label)
+
+        self._hotkey_input = QLineEdit(self._settings.get("drawing_hotkey", "ctrl+shift+d"))
+        self._hotkey_input.setPlaceholderText("e.g., ctrl+shift+d")
+        layout.addWidget(self._hotkey_input)
+
+        hotkey_hint = QLabel("Use format: modifier+key (e.g., ctrl+shift+d)")
+        hotkey_hint.setStyleSheet("font-size: 11px; color: #888;")
+        layout.addWidget(hotkey_hint)
+
         layout.addStretch()
 
         # Buttons
@@ -214,6 +239,7 @@ class SettingsDialog(QDialog):
         self._settings["minimal_title_bar"] = self._minimal_title_bar_cb.isChecked()
         self._settings["word_timeout_ms"] = self._timeout_slider.value()
         self._settings["show_special_keys"] = self._special_cb.isChecked()
+        self._settings["drawing_hotkey"] = self._hotkey_input.text().strip().lower()
         self.accept()
 
     def get_settings(self):

@@ -13,6 +13,7 @@ DEFAULTS = {
     "minimal_title_bar": False,
     "word_timeout_ms": 400,
     "show_special_keys": True,
+    "drawing_hotkey": "alt+d",
 }
 
 
