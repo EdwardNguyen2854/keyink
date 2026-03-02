@@ -5,5 +5,6 @@
   "drawing_canvas_opacity": 1,
   "minimal_title_bar": true,
   "word_timeout_ms": 400,
-  "show_special_keys": true
+  "show_special_keys": true,
+  "theme": "dark"
 }
